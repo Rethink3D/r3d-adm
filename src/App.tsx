@@ -3,12 +3,13 @@ import Login from "./pages/Login";
 import Layout from "./pages/Layout";
 import ProtectedRoute from "./pages/ProtectedRoute";
 import Dashboard from "./pages/Dashboard";
-import Makers from "./pages/Makers";
-import MakerProducts from "./pages/MakerProducts";
-import Products from "./pages/Products";
-import MakerForm from "./pages/components/MakerForm";
-import ProductForm from "./pages/components/ProductForm";
+import Makers from "./modules/catalog/pages/Makers";
+import MakerProducts from "./modules/catalog/pages/MakerProducts";
+import Products from "../src/modules/catalog/pages/Products";
+import MakerForm from "../src/modules/catalog/components/MakerForm";
+import ProductForm from "../src/modules/catalog/components/ProductForm";
 import NotFound from "./pages/NotFound/NotFound";
+import Devolutions from "./modules/app/pages/Devolutions";
 
 const App: React.FC = () => {
   return (
@@ -29,6 +30,8 @@ const App: React.FC = () => {
           <Route path="products" element={<Products />} />
           <Route path="products/new" element={<ProductForm />} />
           <Route path="products/edit/:id" element={<ProductForm />} />
+
+          <Route path="devolutions" element={<Devolutions />} />
         </Route>
       </Route>
 

@@ -7,15 +7,15 @@ import {
   getCategories,
   uploadMakerProfileImage,
   deleteImage,
-} from "../../services/api";
+} from "../services/apiCatalog";
 import type {
   Category,
   Image,
-} from "../../types/types";
+} from "../types/types";
 import {
   MakerStatusEnum,
   ContactTypeEnum,
-} from "../../types/types"; 
+} from "../types/types"; 
 
 const MakerForm: React.FC = () => {
   const { id } = useParams<{ id: string }>();

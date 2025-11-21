@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { loginAdmin } from "../services/api";
+import { loginAdmin } from "../modules/catalog/services/apiCatalog";
 
 const Login: React.FC = () => {
   const [username, setUsername] = useState("");

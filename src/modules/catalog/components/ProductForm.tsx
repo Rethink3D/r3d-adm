@@ -8,8 +8,8 @@ import {
   deleteImage,
   getMakers,
   getCategories,
-} from "../../services/api";
-import type { Maker, Image, Category } from "../../types/types";
+} from "../services/apiCatalog";
+import type { Maker, Image, Category } from "../types/types";
 
 const ProductForm: React.FC = () => {
   const { id } = useParams<{ id: string }>();

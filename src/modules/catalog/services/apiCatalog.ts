@@ -1,10 +1,10 @@
 import type {
-    Category,
-    Image,
-    Maker,
-    MakerPayload,
-    Product,
-    ProductPayload,
+  Category,
+  Image,
+  Maker,
+  MakerPayload,
+  Product,
+  ProductPayload,
 } from "../types/types";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
@@ -13,12 +13,18 @@ interface LoginResponse {
   access_token: string;
 }
 
-// Função helper genérica para requisições
+// Helper simples focado no catálogo
 async function request<T>(
   endpoint: string,
   options: RequestInit = {}
 ): Promise<T> {
+  if (!API_BASE_URL) {
+    throw new Error("VITE_API_BASE_URL não definida no .env");
+  }
+
   const url = `${API_BASE_URL}/${endpoint}`;
+  
+  // Pega o token do login tradicional
   const token = localStorage.getItem("authToken");
 
   const isFormData = options.body instanceof FormData;
@@ -36,7 +42,6 @@ async function request<T>(
     throw new Error(errorData.message || "Ocorreu um erro na requisição.");
   }
 
-  // Retorna vazio se não houver conteúdo (ex: status 204)
   if (
     response.status === 204 ||
     response.headers.get("content-length") === "0"
@@ -48,7 +53,7 @@ async function request<T>(
 }
 
 /* -------------------------------------------------------------------------- */
-/* AUTENTICAÇÃO                                */
+/* AUTENTICAÇÃO                                                               */
 /* -------------------------------------------------------------------------- */
 
 export const loginAdmin = (credentials: {
@@ -62,12 +67,11 @@ export const loginAdmin = (credentials: {
 };
 
 /* -------------------------------------------------------------------------- */
-/* MAKERS                                   */
+/* MAKERS                                                                     */
 /* -------------------------------------------------------------------------- */
 
 export const getMakers = async (): Promise<Maker[]> => {
   const makers = await request<Maker[]>("maker");
-  // Mantendo a lógica original da main que injeta a localização
   return makers.map((maker) => ({
     ...maker,
     location: "São Luís",
@@ -95,7 +99,7 @@ export const deleteMaker = (id: string): Promise<void> =>
   request(`maker/${id}`, { method: "DELETE" });
 
 /* -------------------------------------------------------------------------- */
-/* PRODUTOS                                  */
+/* PRODUTOS                                                                   */
 /* -------------------------------------------------------------------------- */
 
 export const getProducts = (): Promise<Product[]> => request("product");
@@ -116,7 +120,7 @@ export const deleteProduct = (id: string): Promise<void> =>
   request(`product/${id}`, { method: "DELETE" });
 
 /* -------------------------------------------------------------------------- */
-/* CATEGORIAS                                 */
+/* CATEGORIAS                                                                 */
 /* -------------------------------------------------------------------------- */
 
 export const getCategories = (): Promise<Category[]> => request("category");
@@ -128,7 +132,7 @@ export const createCategory = (data: {
   request("category", { method: "POST", body: JSON.stringify(data) });
 
 /* -------------------------------------------------------------------------- */
-/* IMAGENS                                   */
+/* IMAGENS                                                                    */
 /* -------------------------------------------------------------------------- */
 
 export const uploadProductImage = (

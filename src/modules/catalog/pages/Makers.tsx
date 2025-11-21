@@ -1,50 +1,60 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { getProducts, deleteProduct } from "../services/api";
-import type { Product } from "../types/types";
+import { getMakers, deleteMaker } from "../services/apiCatalog";
+import CategoryManager from "../components/CategoryManager";
+import type { Maker } from "../types/types";
 
-const Products: React.FC = () => {
-  const [products, setProducts] = useState<Product[]>([]);
+const Makers: React.FC = () => {
+  const [makers, setMakers] = useState<Maker[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
-    const fetchProducts = async () => {
+    const fetchMakers = async () => {
       try {
-        const data = await getProducts();
-        setProducts(data);
+        const data = await getMakers();
+        setMakers(data);
       } catch (err: any) {
         setError(err.message);
       } finally {
         setLoading(false);
       }
     };
-    fetchProducts();
+    fetchMakers();
   }, []);
 
   const handleDelete = async (id: string) => {
-    if (window.confirm("Tem certeza que deseja excluir este produto?")) {
+    if (
+      window.confirm(
+        "Tem certeza que deseja excluir este maker? Isso também excluirá seus produtos."
+      )
+    ) {
       try {
-        await deleteProduct(id);
-        setProducts(products.filter((p) => p.id !== id));
+        await deleteMaker(id);
+        setMakers(makers.filter((maker) => maker.id !== id));
       } catch (err: any) {
         alert(`Erro ao excluir: ${err.message}`);
       }
     }
   };
 
-  if (loading) return <p>Carregando produtos...</p>;
+  const handleCategoryAdded = () => {
+    console.log("Uma nova categoria foi adicionada.");
+  };
+
+  if (loading) return <p>Carregando makers...</p>;
   if (error) return <p className="text-red-500">{error}</p>;
 
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-black">Gerenciar Produtos</h1>
+        <h1 className="text-3xl font-bold text-black">Gerenciar Makers</h1>
         <Link
-          to="/products/new"
+          to="/makers/new"
           className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600"
         >
-          Novo Produto
+          Novo Maker
         </Link>
       </div>
       <div className="bg-white shadow-md rounded-lg overflow-x-auto">
@@ -52,13 +62,10 @@ const Products: React.FC = () => {
           <thead className="bg-gray-50">
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                Nome do Produto
+                Nome
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                Maker
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                Preço
+                Produtos
               </th>
               <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">
                 Ações
@@ -66,26 +73,28 @@ const Products: React.FC = () => {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {products.map((product) => (
-              <tr key={product.id}>
+            {makers.map((maker) => (
+              <tr key={maker.id}>
                 <td className="px-6 py-4 whitespace-nowrap text-black">
-                  {product.name}
+                  {maker.name}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-black">
-                  {product.maker?.name || "N/A"}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-black">
-                  R$ {product.price}
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <Link
+                    to={`/makers/${maker.id}/products`}
+                    className="text-blue-600 hover:underline"
+                  >
+                    Ver Produtos
+                  </Link>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                   <Link
-                    to={`/products/edit/${product.id}`}
+                    to={`/makers/edit/${maker.id}`}
                     className="text-indigo-600 hover:text-indigo-900 mr-4"
                   >
                     Editar
                   </Link>
                   <button
-                    onClick={() => handleDelete(product.id)}
+                    onClick={() => handleDelete(maker.id)}
                     className="text-red-600 hover:text-red-900"
                   >
                     Excluir
@@ -96,8 +105,9 @@ const Products: React.FC = () => {
           </tbody>
         </table>
       </div>
+      <CategoryManager onCategoryAdded={handleCategoryAdded} />
     </div>
   );
 };
 
-export default Products;
+export default Makers;
