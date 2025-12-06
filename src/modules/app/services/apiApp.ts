@@ -1,5 +1,6 @@
 import type { DevolutionResponseDTO } from "../types/types";
 import { OrderStatusEnum } from "../../../types/types";
+import { auth } from "../../../services/firebase";
 
 const VITE_DEVOLUTION_URL = import.meta.env.VITE_DEVOLUTION_API_BASE_URL;
 
@@ -14,7 +15,6 @@ interface UpdateDevolutionStatusDTO {
   products: ProductToRefundDTO[];
 }
 
-// Helper focado apenas no APP/Devoluções
 async function request<T>(
   endpoint: string,
   options: RequestInit = {}
@@ -25,11 +25,9 @@ async function request<T>(
 
   const url = `${VITE_DEVOLUTION_URL}/${endpoint}`;
   
-  // Token específico para operações do APP (enquanto não migra pro login Firebase real)
-  const token = import.meta.env.VITE_DEV_ADMIN_FIREBASE_TOKEN;
-  
-  if (!token) {
-    console.warn('Atenção: VITE_DEV_ADMIN_FIREBASE_TOKEN não definido.');
+  let token = null;
+  if (auth.currentUser) {
+      token = await auth.currentUser.getIdToken();
   }
 
   const isFormData = options.body instanceof FormData;

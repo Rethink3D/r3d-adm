@@ -3,11 +3,11 @@ import Login from "./pages/Login";
 import Layout from "./pages/Layout";
 import ProtectedRoute from "./pages/ProtectedRoute";
 import Dashboard from "./pages/Dashboard";
-import Makers from "./modules/catalog/pages/Makers";
-import MakerProducts from "./modules/catalog/pages/MakerProducts";
-import Products from "../src/modules/catalog/pages/Products";
-import MakerForm from "../src/modules/catalog/components/MakerForm";
-import ProductForm from "../src/modules/catalog/components/ProductForm";
+import Makers from "./modules/web/pages/Makers";
+import MakerProducts from "./modules/web/pages/MakerProducts";
+import Products from "./modules/web/pages/Products";
+import MakerForm from "./modules/web/components/MakerForm";
+import ProductForm from "./modules/web/components/ProductForm";
 import NotFound from "./pages/NotFound/NotFound";
 import Devolutions from "./modules/app/pages/Devolutions";
 

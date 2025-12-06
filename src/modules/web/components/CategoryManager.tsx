@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { createCategory } from "../services/apiCatalog";
+import { createCategory } from "../services/apiWeb";
 
 interface CategoryManagerProps {
   onCategoryAdded: () => void;

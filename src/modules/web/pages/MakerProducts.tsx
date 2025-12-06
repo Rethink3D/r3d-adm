@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { getProducts, getMakerById } from "../services/apiCatalog";
+import { getProducts, getMakerById } from "../services/apiWeb";
 import type { Product, Maker } from "../types/types";
 
 const MakerProducts: React.FC = () => {

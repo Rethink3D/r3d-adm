@@ -1,3 +1,4 @@
+import { auth } from "../../../services/firebase";
 import type {
   Category,
   Image,
@@ -5,15 +6,12 @@ import type {
   MakerPayload,
   Product,
   ProductPayload,
+  ProductStatusEnum,
 } from "../types/types";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-interface LoginResponse {
-  access_token: string;
-}
 
-// Helper simples focado no catálogo
 async function request<T>(
   endpoint: string,
   options: RequestInit = {}
@@ -24,8 +22,10 @@ async function request<T>(
 
   const url = `${API_BASE_URL}/${endpoint}`;
   
-  // Pega o token do login tradicional
-  const token = localStorage.getItem("authToken");
+  let token = null;
+  if (auth.currentUser) {
+      token = await auth.currentUser.getIdToken();
+  }
 
   const isFormData = options.body instanceof FormData;
   
@@ -53,29 +53,20 @@ async function request<T>(
 }
 
 /* -------------------------------------------------------------------------- */
-/* AUTENTICAÇÃO                                                               */
-/* -------------------------------------------------------------------------- */
-
-export const loginAdmin = (credentials: {
-  username: string;
-  password: string;
-}): Promise<LoginResponse> => {
-  return request<LoginResponse>("auth/login", {
-    method: "POST",
-    body: JSON.stringify(credentials),
-  });
-};
-
-/* -------------------------------------------------------------------------- */
 /* MAKERS                                                                     */
 /* -------------------------------------------------------------------------- */
 
-export const getMakers = async (): Promise<Maker[]> => {
-  const makers = await request<Maker[]>("maker");
-  return makers.map((maker) => ({
-    ...maker,
-    location: "São Luís",
-  }));
+export const getMakersForAdmin = async (): Promise<Maker[]> => {
+    const makers = await request<Maker[]>("maker/admin/list"); 
+    return makers; 
+};
+
+export const getMakerByIdForAdmin = async (id: string): Promise<Maker> => {
+    const maker = await request<Maker>(`maker/admin/${id}`);
+    return {
+        ...maker,
+        location: "São Luís",
+    };
 };
 
 export const getMakerById = async (id: string): Promise<Maker> => {
@@ -98,6 +89,13 @@ export const updateMaker = (
 export const deleteMaker = (id: string): Promise<void> =>
   request(`maker/${id}`, { method: "DELETE" });
 
+export const mergeMakers = (sourceId: string, targetId: string): Promise<void> => {
+    return request("maker/merge", {
+        method: "POST",
+        body: JSON.stringify({ sourceId, targetId }),
+    });
+};
+
 /* -------------------------------------------------------------------------- */
 /* PRODUTOS                                                                   */
 /* -------------------------------------------------------------------------- */
@@ -118,6 +116,16 @@ export const updateProduct = (
 
 export const deleteProduct = (id: string): Promise<void> =>
   request(`product/${id}`, { method: "DELETE" });
+
+export const updateProductStatus = (
+  id: string,
+  status: ProductStatusEnum
+): Promise<Product> => {
+  return request(`product/${id}/status`, {
+    method: "PATCH",
+    body: JSON.stringify({ status }),
+  });
+};
 
 /* -------------------------------------------------------------------------- */
 /* CATEGORIAS                                                                 */

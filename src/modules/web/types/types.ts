@@ -15,6 +15,7 @@ export enum MakerStatusEnum {
   ACTIVE = "ACTIVE",
   SUSPENDED = "SUSPENDED",
   DEACTIVATED = "DEACTIVATED",
+  PENDING = "PENDING",
 }
 
 export interface Contact {
@@ -40,6 +41,7 @@ export interface Category {
 export interface Maker {
   id: string;
   name: string;
+  cpf?: string;
   description: string;
   acceptsPersonalization: boolean;
   status: MakerStatusEnum;
@@ -51,14 +53,16 @@ export interface Maker {
   location: string;
   rating?: number;
   productCount?: number;
+  products?: Product[];
 }
 
 export interface Product {
   id: string;
   name: string;
   description: string;
-  material: string;
+  material: MaterialTypeEnum;
   price: string;
+  discountPercentage?: number;
   isPersonalizable: boolean;
   maker: Maker;
   images: Image[];
@@ -66,10 +70,35 @@ export interface Product {
   createdAt: string;
   deletedAt: string | null;
   popularity?: number;
+  status: ProductStatusEnum;
+  type: ProductTypeEnum;
+}
+
+export enum ProductStatusEnum {
+  ACTIVE = "ACTIVE",
+  PAUSED = "PAUSED",
+}
+
+export enum ProductTypeEnum {
+  STANDARD = "STANDARD",
+  PROMOTIONAL = "PROMOTIONAL",
+}
+
+export enum MaterialTypeEnum {
+  PLA = "PLA",
+  ABS = "ABS",
+  PETG = "PETG",
+  TPU = "TPU",
+  Nylon = "Nylon",
+  ASA = "ASA",
+  PC = "Policarbonato",
+  Resin = "Resina",
+  Outro = "Outro",
 }
 
 export interface MakerPayload {
   name: string;
+  cpf: string;
   description: string;
   acceptsPersonalization: boolean;
   status: MakerStatusEnum;
@@ -85,8 +114,10 @@ export interface ProductPayload {
   description: string;
   material: string;
   price: string;
+  discountPercentage?: number;
   isPersonalizable: boolean;
-  makerId: string;
+  makerId?: string;
   categoryIds?: string[];
+  type?: ProductTypeEnum;
 }
 
