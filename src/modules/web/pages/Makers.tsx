@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react"; // [1] Import useCallback
+import { useEffect, useState, useCallback } from "react"; 
 import { Link } from "react-router-dom";
 import { deleteMaker, mergeMakers, getMakersForAdmin } from "../services/apiWeb";
 import CategoryManager from "../components/CategoryManager";

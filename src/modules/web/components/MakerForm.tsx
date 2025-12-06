@@ -157,7 +157,7 @@ const MakerForm: React.FC = () => {
         if (fileToUpload)
           await uploadMakerProfileImage(newMaker.id, fileToUpload);
       }
-      navigate("/admin/makers");
+      navigate("/makers");
     } catch (err: any) {
       const msg = err.message || "Erro desconhecido";
       setError("Erro ao salvar maker: " + msg);
@@ -408,7 +408,7 @@ const MakerForm: React.FC = () => {
                 ? "Salvar Alterações"
                 : "Criar Maker"}
             </button>
-            <Link to="/admin/makers" className="text-gray-600 hover:underline">
+            <Link to="/makers" className="text-gray-600 hover:underline">
               Cancelar
             </Link>
           </div>
