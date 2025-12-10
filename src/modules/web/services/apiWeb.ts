@@ -121,7 +121,7 @@ export const updateProductStatus = (
   id: string,
   status: ProductStatusEnum
 ): Promise<Product> => {
-  return request(`product/${id}/status`, {
+  return request(`product/admin/${id}/status`, {
     method: "PATCH",
     body: JSON.stringify({ status }),
   });
@@ -149,7 +149,7 @@ export const uploadProductImage = (
 ): Promise<Image> => {
   const formData = new FormData();
   formData.append("file", file);
-  return request(`image/product/${productId}`, {
+  return request(`image/admin/product/${productId}`, {
     method: "POST",
     body: formData,
   });
@@ -161,12 +161,12 @@ export const uploadMakerProfileImage = (
 ): Promise<Image> => {
   const formData = new FormData();
   formData.append("file", file);
-  return request(`image/maker/${makerId}/profile`, {
+  return request(`image/admin/maker/${makerId}/profile`, {
     method: "POST",
     body: formData,
   });
 };
 
 export const deleteImage = (imageId: string): Promise<void> => {
-  return request(`image/${imageId}`, { method: "DELETE" });
+  return request(`image/admin/${imageId}`, { method: "DELETE" });
 };
